@@ -1,24 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { useThemeSwitcher } from 'react-css-theme-switcher';
+import { Input, Switch } from 'antd';
 
 function App() {
+  const [isDarkMode, setIsDarkMode] = React.useState<boolean>();
+  const { switcher, currentTheme, themes } = useThemeSwitcher();
+
+  const toggleTheme = (isChecked: boolean) => {
+    setIsDarkMode(isChecked);
+    switcher({ theme: isChecked ? themes.dark : themes.light });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="main fade-in">
+      <h1>The current theme: {currentTheme}</h1>
+      <Switch checked={isDarkMode} onChange={toggleTheme} />
+
+      <Input
+        style={{ width: 300, marginTop: 30 }}
+        placeholder="I will change with the theme!"
+      />
     </div>
   );
 }
