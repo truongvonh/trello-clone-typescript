@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 const themes = {
   dark: `${process.env.PUBLIC_URL}/dark-theme.css`,
@@ -17,7 +18,11 @@ ReactDOM.render(
       defaultTheme="light"
       insertionPoint="styles-insertion-point"
     >
-      <App />
+      <Suspense fallback={null}>
+        <Router>
+          <App />
+        </Router>
+      </Suspense>
     </ThemeSwitcherProvider>
   </React.StrictMode>,
   document.getElementById('root')
