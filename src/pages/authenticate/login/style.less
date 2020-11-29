@@ -1,7 +1,30 @@
-body {
-  display: none;
-}
-
 #login-page {
   height: 100vh;
+
+  .ant-row {
+    height: 100%;
+  }
+
+  .form-login-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+
+    .ant-input-group-wrapper:first-child {
+      margin-top: 1rem;
+    }
+  }
+
+  .button-wrapper {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .slide-login {
+    img {
+      object-fit: cover;
+      height: 100vh;
+    }
+  }
 }

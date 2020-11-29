@@ -1,0 +1,8 @@
+{
+  "login": "LOGIN",
+  "require_email": "Please input your username!",
+  "require_password": "Please input your password!",
+  "invalid_email": "Please input valid email!",
+
+  "login_success": "Login success!"
+}

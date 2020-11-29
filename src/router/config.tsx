@@ -1,19 +1,18 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-// import DemoPage from 'pages/demo';
-// import LoginPage from '@pages/authenticate/login';
+import { PageEnum } from './page.enum';
 
 const LoginPage = React.lazy(() => import('pages/authenticate/login'));
 const DemoPage = React.lazy(() => import('pages/demo'));
 
 export const routeConfig = [
   {
-    path: '/authenticate/login',
+    path: PageEnum.LOGIN_PAGE,
     exact: true,
     component: LoginPage,
   },
   {
-    path: '/demo',
+    path: PageEnum.DEMO_PAGE,
     exact: true,
     component: DemoPage,
   },

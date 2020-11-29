@@ -5,11 +5,11 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
-enum Status {
-  idle = 'idle',
-  loading = 'loading',
-  loaded = 'loaded',
-}
+const Status = {
+  IDLE: 'idle',
+  LOADING: 'loading',
+  LOADED: 'loaded',
+};
 
 interface IProps {}
 const DemoPage = (props: IProps) => {
@@ -21,7 +21,7 @@ const DemoPage = (props: IProps) => {
     switcher({ theme: isChecked ? themes.dark : themes.light });
   };
 
-  if (status === Status.loading) return null;
+  if (status === Status.LOADING) return null;
 
   return (
     <div className="main fade-in">
