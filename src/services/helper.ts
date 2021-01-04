@@ -6,4 +6,8 @@ export class HelperServices {
   isNotEmptyObject(obj: Object): boolean {
     return Object.keys(obj).length > 0;
   }
+
+  isProduction(): boolean {
+    return process.env.NODE_ENV === 'production';
+  }
 }
