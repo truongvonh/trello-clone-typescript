@@ -7,13 +7,13 @@ import {StatusEnum} from "api/status.enum";
 import {PageEnum} from "router/page.enum";
 import {LocalStoreService} from "services/localStore";
 import {AUTH_KEY} from "constant/localstore.key";
-import { IUserInfo } from 'pages/authenticate/login/store/reducer';
+import {IUserInfo} from 'pages/authenticate/login/store/reducer';
 import {HelperServices} from "services/helper";
 
 const helperService = new HelperServices()
 
 const axiosInstance = axios.create({
-  baseURL: helperService.isProduction() ? `http://localhost:4000/api` : 'https://api.trello-clone.dev/api',
+  baseURL: helperService.isProduction() ? 'https://api.trello-clone.dev/api' : `http://localhost:4000/api` ,
   withCredentials: true
 });
 
