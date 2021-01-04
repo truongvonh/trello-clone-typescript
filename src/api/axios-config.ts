@@ -12,6 +12,8 @@ import {HelperServices} from "services/helper";
 
 const helperService = new HelperServices()
 
+console.log('helperService.isProduction()',helperService.isProduction())
+
 const axiosInstance = axios.create({
   baseURL: helperService.isProduction() ? 'https://api.trello-clone.dev/api' : `http://localhost:4000/api` ,
   withCredentials: true
