@@ -7,12 +7,12 @@ import {StatusEnum} from "api/status.enum";
 import {PageEnum} from "router/page.enum";
 import {LocalStoreService} from "services/localStore";
 import {AUTH_KEY} from "constant/localstore.key";
-import {IUserInfo} from 'pages/authenticate/login/store/reducer';
+import {auth, IUserInfo} from 'pages/authenticate/login/store/reducer';
 import {HelperServices} from "services/helper";
+import store from "redux/store";
+
 
 const helperService = new HelperServices()
-
-console.log('helperService.isProduction()',helperService.isProduction())
 
 const axiosInstance = axios.create({
   baseURL: helperService.isProduction() ? 'https://api.trello-clone.dev/api' : `http://localhost:4000/api` ,
@@ -35,7 +35,8 @@ axiosInstance.interceptors.response.use(
       const userStorage = localStorage.getParse<IUserInfo>(AUTH_KEY.USER_LOGIN);
 
       if (userStorage && new HelperServices().isNotEmptyObject(userStorage)) {
-        localStorage.deleteItem(AUTH_KEY.USER_LOGIN)
+        localStorage.deleteItem(AUTH_KEY.USER_LOGIN);
+        store.dispatch(auth.actions.getUserInfo({}))
       }
 
       if (history.location.pathname !== PageEnum.LOGIN_PAGE) {
