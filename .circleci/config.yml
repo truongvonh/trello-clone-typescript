@@ -1,13 +1,43 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-# Use a package of configuration called an orb.
 orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.4.1
-# Orchestrate or schedule a set of jobs
+  node: circleci/node@3.0.0
+  docker: circleci/docker@1.4.0
+  dotenv: anilanar/dotenv@volatile
+
+jobs:
+  build-and-publish-docker-image:
+    environment:
+      DOCKER_IMAGE: truongvn/react-trello-client
+      DOCKER_TAG: latest
+    executor: docker/docker
+
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - dotenv/source:
+          path: .env
+      - docker/build:
+          extra_build_args: '--no-cache --rm --target production-stage'
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+
+  deploy-digital-ocean-vps:
+    executor: docker/docker
+    steps:
+      - add_ssh_keys
+      - run: ssh-keyscan -H $DEPLOY_IP >> ~/.ssh/known_hosts
+      - run: ssh -oStrictHostKeyChecking=no -v $DEPLOYED_USER@$DEPLOY_IP './scripts/deploy-frontend.sh'
+
 workflows:
-  # Name the workflow "welcome"
-  welcome:
-    # Run the welcome/run job in its own container
+  docker-init:
     jobs:
-      - welcome/run
+      - build-and-publish-docker-image
+      - deploy-digital-ocean-vps:
+          requires:
+            - build-and-publish-docker-image
