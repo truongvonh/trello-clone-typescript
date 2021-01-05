@@ -1,5 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import { auth } from 'pages/authenticate/login/store/reducer';
+import { auth } from 'pages/Authenticate/Login/store/reducer';
 import { connectRouter } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 export const history = createBrowserHistory();

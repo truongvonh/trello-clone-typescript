@@ -1,5 +1,5 @@
 import { AppThunk } from 'redux/store';
-import { history, RootState } from 'redux/rootReducer';
+import { history } from 'redux/rootReducer';
 import axiosInstance from 'api/axios-config';
 import { AUTH_ENDPOINT } from 'api/endpoint';
 import { auth } from './reducer';
@@ -32,7 +32,7 @@ export const loginUser = (payload: ILoginPayload): AppThunk => async (
     dispatch(getUserInfo(data));
     localStorage.set(AUTH_KEY.USER_LOGIN, data);
     message.success(i18n.t('login_success'));
-    history.push('/demo');
+    history.push(PageEnum.BOARD_PAGE);
   } catch (err) {
     dispatch(onErrored(err));
   } finally {
@@ -47,15 +47,5 @@ export const getUserLogin = (): AppThunk => async dispatch => {
     dispatch(getUserInfo(data));
   } catch (err) {
     dispatch(onErrored(err));
-  }
-};
-
-export const checkUserLogin = (): AppThunk => (dispatch, getState) => {
-  dispatch(getUserLogin());
-  const store: RootState = getState();
-  const { userInfo } = store.auth;
-
-  if (!new HelperServices().isNotEmptyObject(userInfo)) {
-    history.push(PageEnum.DEMO_PAGE);
   }
 };

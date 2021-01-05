@@ -7,7 +7,7 @@ import {StatusEnum} from "api/status.enum";
 import {PageEnum} from "router/page.enum";
 import {LocalStoreService} from "services/localStore";
 import {AUTH_KEY} from "constant/localstore.key";
-import {auth, IUserInfo} from 'pages/authenticate/login/store/reducer';
+import {auth, IUserInfo} from 'pages/Authenticate/Login/store/reducer';
 import {HelperServices} from "services/helper";
 import store from "redux/store";
 

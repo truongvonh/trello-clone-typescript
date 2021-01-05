@@ -10,12 +10,12 @@ import {
   getUserLogin,
   ILoginPayload,
   loginUser,
-} from 'pages/authenticate/login/store/actions';
+} from 'pages/Authenticate/Login/store/actions';
 import i18n from 'i18n';
 import {
   selectAuthLoading,
   selectUserInfo,
-} from 'pages/authenticate/login/store/selector';
+} from 'pages/Authenticate/Login/store/selector';
 import { HelperServices } from 'services/helper';
 import { PageEnum } from 'router/page.enum';
 import { Redirect } from 'react-router-dom';
@@ -32,7 +32,7 @@ const LoginPage = () => {
   }, []);
 
   if (new HelperServices().isNotEmptyObject(userInfo))
-    return <Redirect to={PageEnum.DEMO_PAGE} />;
+    return <Redirect to={PageEnum.BOARD_PAGE} />;
 
   const onFinish = (values: ILoginPayload) => {
     dispatch(loginUser(values));

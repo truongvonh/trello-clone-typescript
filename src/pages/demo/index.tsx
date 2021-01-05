@@ -5,7 +5,7 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
-const Status = {
+export const StatusTheme = {
   IDLE: 'idle',
   LOADING: 'loading',
   LOADED: 'loaded',
@@ -21,7 +21,7 @@ const DemoPage = (props: IProps) => {
     switcher({ theme: isChecked ? themes.dark : themes.light });
   };
 
-  if (status === Status.LOADING) return null;
+  if (status === StatusTheme.LOADING) return null;
 
   return (
     <div className="main fade-in">
