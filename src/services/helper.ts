@@ -10,4 +10,15 @@ export class HelperServices {
   isProduction(): boolean {
     return process.env.NODE_ENV === 'production';
   }
+
+  loadJs = (file: string, onLoad: () => void) => {
+    let script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = file;
+    script.async = true;
+    script.onload = function() {
+      onLoad();
+    };
+    document.body.appendChild(script);
+  };
 }
