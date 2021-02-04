@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import 'asset/css/bass.min.css';
 import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
