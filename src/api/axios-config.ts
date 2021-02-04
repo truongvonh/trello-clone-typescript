@@ -11,7 +11,6 @@ import {auth, IUserInfo} from 'pages/Authenticate/Login/store/reducer';
 import {HelperServices} from "services/helper";
 import store from "redux/store";
 
-
 const helperService = new HelperServices()
 
 const axiosInstance = axios.create({
