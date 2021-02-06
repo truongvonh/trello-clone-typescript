@@ -8,3 +8,5 @@ export const selectUnsplashImages = (store: RootState) =>
 
 export const selectUnsplashImageChoose = (store: RootState) =>
   store.board.imageSelected;
+
+export const selectBoardLoading = (store: RootState) => store.board.loading;

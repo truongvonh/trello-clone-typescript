@@ -1,0 +1,61 @@
+@box-size: 50px;
+@duration: 0.4s;
+@width-limit: 15px;
+
+@height-limit: 38px;
+
+.trello-loading {
+  display: inline-block;
+  width: @box-size;
+  height: @box-size;
+  border-radius: 3px;
+  position: relative;
+  margin: 5px;
+
+  &:after,
+  &:before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    width: @width-limit;
+    background: #fff;
+    border-radius: 2px;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-direction: alternate;
+    animation-duration: @duration;
+  }
+
+  &:before {
+    left: 6px;
+    -webkit-animation-name: first-animation;
+  }
+  &:after {
+    right: 6px;
+    -webkit-animation-name: second-animation;
+  }
+
+  &.default {
+    background-color: #1f658e;
+  }
+}
+
+@keyframes first-animation {
+  from {
+    height: @height-limit;
+  }
+
+  to {
+    height: 5px;
+  }
+}
+
+@keyframes second-animation {
+  from {
+    height: 1px;
+  }
+
+  to {
+    height: @height-limit;
+  }
+}

@@ -1,3 +1,7 @@
+interface IParamObj {
+  [key: string]: string;
+}
+
 export class HelperServices {
   async sleep(ms: number): Promise<number> {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -20,5 +24,18 @@ export class HelperServices {
       onLoad();
     };
     document.body.appendChild(script);
+  };
+
+  placeParams = (pathRegex: string, params: IParamObj) => {
+    let segments = pathRegex.split('/');
+    return segments
+      .map(segment => {
+        let offset = segment.indexOf(':') + 1;
+        if (!offset) return segment;
+
+        let key = segment.slice(offset);
+        return params[key];
+      })
+      .join('/');
   };
 }

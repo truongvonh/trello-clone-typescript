@@ -8,6 +8,10 @@ export const DEVICE_ENDPOINT = {
   REGISTER: '/device/register',
 };
 
+export const BOARD_ENDPOINT = {
+  CREATE_BOARD: '/board',
+};
+
 export const UNSPLASH_ENDPOINT = {
   GET_ALL: '/unsplash',
 };

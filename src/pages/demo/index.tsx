@@ -24,7 +24,7 @@ const DemoPage = (props: IProps) => {
   if (status === StatusTheme.LOADING) return null;
 
   return (
-    <div className="main fade-in">
+    <div className="main">
       <Button
         type="primary"
         shape="circle"

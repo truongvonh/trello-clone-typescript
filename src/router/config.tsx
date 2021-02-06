@@ -5,48 +5,10 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { selectUserInfo } from 'pages/Authenticate/Login/store/selector';
 import { HelperServices } from 'services/helper';
 
-const LoginPage = React.lazy(() => import('pages/Authenticate/Login'));
 const DemoPage = React.lazy(() => import('pages/demo'));
 const NotFoundPage = React.lazy(() => import('pages/NotFound'));
 const BoardPage = React.lazy(() => import('pages/Board'));
-
-export const routeConfig = [
-  {
-    path: PageEnum.LOGIN_PAGE,
-    exact: true,
-    component: LoginPage,
-  },
-  {
-    path: PageEnum.DEMO_PAGE,
-    exact: true,
-    isPrivate: true,
-    component: DemoPage,
-  },
-  {
-    path: PageEnum.BOARD_PAGE,
-    exact: true,
-    isPrivate: true,
-    component: BoardPage,
-  },
-  {
-    path: PageEnum.NOT_FOUND_PAGE,
-    component: NotFoundPage,
-  },
-  // {
-  //   path: '/tacos',
-  //   component: Tacos,
-  //   routes: [
-  //     {
-  //       path: '/tacos/bus',
-  //       component: Bus,
-  //     },
-  //     {
-  //       path: '/tacos/cart',
-  //       component: Cart,
-  //     },
-  //   ],
-  // },
-];
+const BoardDetailPage = React.lazy(() => import('pages/Board/:boardId'));
 
 interface IRoute {
   path: PageEnum;
@@ -55,6 +17,22 @@ interface IRoute {
   routes?: IRoute[];
   isPrivate?: boolean;
 }
+
+export const routeConfig: IRoute[] = [
+  {
+    path: PageEnum.BOARD_PAGE,
+    isPrivate: true,
+    exact: true,
+    component: BoardPage, // exact: true,
+  },
+  {
+    path: PageEnum.BOARD_DETAIL_PAGE,
+    isPrivate: true,
+    exact: true,
+    component: BoardDetailPage,
+  },
+  { path: PageEnum.NOT_FOUND_PAGE, component: NotFoundPage },
+];
 
 const PrivateRoute: React.FC<IRoute> = privateProps => {
   const userInfo = useSelector(selectUserInfo, shallowEqual);
