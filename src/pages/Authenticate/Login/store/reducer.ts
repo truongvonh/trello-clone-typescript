@@ -15,8 +15,7 @@ interface IAuthState {
 }
 
 const initialState: IAuthState = {
-  userInfo:
-    new LocalStoreService().getParse<IUserInfo>(AUTH_KEY.USER_LOGIN) || {},
+  userInfo: new LocalStoreService().getParse<IUserInfo>(AUTH_KEY.USER_LOGIN) || {},
   loading: false,
   error: null,
 };

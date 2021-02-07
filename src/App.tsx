@@ -16,7 +16,6 @@ import { StatusTheme } from 'pages/demo';
 import { Button } from 'antd';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { THEME_COLOR } from 'constant/theme.color';
-import TrelloLoading from 'pages/Board/components/TrelloLoading';
 
 const LoginPage = React.lazy(() => import('pages/Authenticate/Login'));
 
@@ -33,9 +32,7 @@ function App() {
   const registerUserDevice = () => {
     if (!helperService.isNotEmptyObject(userInfo)) return;
 
-    const localDeviceToken = localStorage.getString(
-      LOCAL_KEY.DEVICE_TOKEN_ONE_SIGNAL
-    );
+    const localDeviceToken = localStorage.getString(LOCAL_KEY.DEVICE_TOKEN_ONE_SIGNAL);
 
     if (localDeviceToken) return;
 
@@ -45,35 +42,27 @@ function App() {
           .post(DEVICE_ENDPOINT.REGISTER, {
             deviceToken,
           })
-          .then(() =>
-            localStorage.set<string>(
-              LOCAL_KEY.DEVICE_TOKEN_ONE_SIGNAL,
-              deviceToken
-            )
-          );
+          .then(() => localStorage.set<string>(LOCAL_KEY.DEVICE_TOKEN_ONE_SIGNAL, deviceToken));
       }
     });
   };
 
   useEffect(() => {
-    helperService.loadJs(
-      'https://cdn.onesignal.com/sdks/OneSignalSDK.js',
-      () => {
-        if (window !== undefined && OneSignal) {
-          OneSignal.push(() => {
-            OneSignal.init({
-              appId: process.env.REACT_APP_ONESIGNAL_APP_ID,
-            });
-
-            OneSignal.getNotificationPermission((permission: Permission) => {
-              console.log('permission', permission);
-            });
-
-            registerUserDevice();
+    helperService.loadJs('https://cdn.onesignal.com/sdks/OneSignalSDK.js', () => {
+      if (window !== undefined && OneSignal) {
+        OneSignal.push(() => {
+          OneSignal.init({
+            appId: process.env.REACT_APP_ONESIGNAL_APP_ID,
           });
-        }
+
+          OneSignal.getNotificationPermission((permission: Permission) => {
+            console.log('permission', permission);
+          });
+
+          registerUserDevice();
+        });
       }
-    );
+    });
   }, []);
 
   const [isDarkMode, setIsDarkMode] = React.useState<boolean>(false);
@@ -114,15 +103,9 @@ function App() {
 
         <MainLayout>
           <Switch>
-            <Redirect
-              exact
-              from={PageEnum.DEFAULT_PAGE}
-              to={PageEnum.BOARD_PAGE}
-            />
+            <Redirect exact from={PageEnum.DEFAULT_PAGE} to={PageEnum.BOARD_PAGE} />
 
-            {routeConfig.map((route, i) => (
-              <RouteWithSubRoutes key={i} {...route} />
-            ))}
+            {routeConfig.map((route, i) => <RouteWithSubRoutes key={i} {...route} />)}
           </Switch>
         </MainLayout>
       </Switch>

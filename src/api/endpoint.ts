@@ -10,6 +10,7 @@ export const DEVICE_ENDPOINT = {
 
 export const BOARD_ENDPOINT = {
   CREATE_BOARD: '/board',
+  GET_BOARD_OF_USER: (userId: string) => `board/${userId}`,
 };
 
 export const UNSPLASH_ENDPOINT = {

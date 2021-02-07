@@ -5,6 +5,7 @@ import { BOARD_ENDPOINT, UNSPLASH_ENDPOINT } from 'api/endpoint';
 import {
   endBoardProcess,
   IUnsplashImage,
+  onGetAllBoards,
   selectUnsplashImage,
   setAllUnsplashImageSuccess,
   startBoardProcess,
@@ -27,13 +28,14 @@ export interface IQueryImagePayload {
   order_by?: OrderBy;
 }
 
-export const getAllUnsplashImage = (
-  queryPayload: IQueryImagePayload
-): AppThunk => async (dispatch, getState) => {
+const helperService = new HelperServices();
+
+export const getAllUnsplashImage = (queryPayload: IQueryImagePayload): AppThunk => async (
+  dispatch,
+  getState
+) => {
   try {
-    const {
-      data,
-    }: AxiosResponse<Array<IUnsplashImage>> = await axiosInstance.get(
+    const { data }: AxiosResponse<Array<IUnsplashImage>> = await axiosInstance.get(
       UNSPLASH_ENDPOINT.GET_ALL,
       { params: { ...queryPayload, order_by: OrderBy.Latest } }
     );
@@ -42,19 +44,12 @@ export const getAllUnsplashImage = (
   } catch (err) {}
 };
 
-export const createNewBoard = (name: string): AppThunk => async (
-  dispatch,
-  getState
-) => {
+export const createNewBoard = (name: string): AppThunk => async (dispatch, getState) => {
   try {
-    const helperService = new HelperServices();
     dispatch(startBoardProcess());
     const urls = selectUnsplashImageChoose(getState());
     const payload = { name, urls };
-    const { data: newBoard } = await axiosInstance.post(
-      BOARD_ENDPOINT.CREATE_BOARD,
-      payload
-    );
+    const { data: newBoard } = await axiosInstance.post(BOARD_ENDPOINT.CREATE_BOARD, payload);
     history.push(
       helperService.placeParams(PageEnum.BOARD_DETAIL_PAGE, {
         boardId: newBoard._id,
@@ -63,7 +58,19 @@ export const createNewBoard = (name: string): AppThunk => async (
     dispatch(toggleBoardModal(false));
   } catch (err) {
   } finally {
-    await new HelperServices().sleep(400);
+    await helperService.sleep(400);
+    dispatch(endBoardProcess());
+  }
+};
+
+export const getAllBoardOfUser = (userId: string): AppThunk => async (dispatch, getState) => {
+  try {
+    dispatch(startBoardProcess());
+    const { data: allBoards } = await axiosInstance.get(BOARD_ENDPOINT.GET_BOARD_OF_USER(userId));
+    dispatch(onGetAllBoards(allBoards));
+  } catch (e) {
+  } finally {
+    await helperService.sleep(1000);
     dispatch(endBoardProcess());
   }
 };

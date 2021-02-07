@@ -13,11 +13,18 @@ export interface IUnsplashImage {
   urls: IUnsplashUrls;
 }
 
+export interface IBoardResponse {
+  name: string;
+  _id: string;
+  urls: IUnsplashUrls;
+}
+
 interface IBoardState {
   isDisplayModalBoard: boolean;
   unsplashImages: Array<IUnsplashImage>;
   imageSelected: IUnsplashUrls;
   loading: boolean;
+  userBoards: Array<IBoardResponse>;
 }
 
 export const initialBoardState: IBoardState = {
@@ -25,6 +32,7 @@ export const initialBoardState: IBoardState = {
   unsplashImages: [],
   imageSelected: {},
   loading: false,
+  userBoards: [],
 };
 
 export const boardReducer = createSlice({
@@ -37,10 +45,7 @@ export const boardReducer = createSlice({
     toggleBoardModal(state, action: PayloadAction<boolean>) {
       state.isDisplayModalBoard = action.payload;
     },
-    setAllUnsplashImageSuccess(
-      state,
-      action: PayloadAction<Array<IUnsplashImage>>
-    ) {
+    setAllUnsplashImageSuccess(state, action: PayloadAction<Array<IUnsplashImage>>) {
       state.unsplashImages = action.payload;
     },
     selectUnsplashImage(state, action: PayloadAction<IUnsplashUrls>) {
@@ -48,6 +53,9 @@ export const boardReducer = createSlice({
     },
     endBoardProcess(state) {
       state.loading = false;
+    },
+    onGetAllBoards(state, action: PayloadAction<Array<IBoardResponse>>) {
+      state.userBoards = action.payload;
     },
   },
 });
@@ -58,4 +66,5 @@ export const {
   selectUnsplashImage,
   startBoardProcess,
   endBoardProcess,
+  onGetAllBoards,
 } = boardReducer.actions;

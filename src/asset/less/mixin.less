@@ -39,6 +39,7 @@
   position: relative;
 
   &:after {
+    transition: all 0.3s ease-in-out;
     content: '';
     display: block;
     position: absolute;
@@ -49,6 +50,14 @@
     background: rgba(#000, 0.3);
     z-index: 1;
   }
+}
+
+.over-clay-background() {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  .over-clay();
 }
 
 .absolute-center {
