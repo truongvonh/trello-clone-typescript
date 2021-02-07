@@ -4,5 +4,11 @@
   "require_password": "Please input your password!",
   "invalid_email": "Please input valid email!",
 
-  "login_success": "Login success!"
+  "login_success": "Login success!",
+
+  "board_page": {
+    "create_board_hint": "Create board",
+    "new_board_title": "Add board title",
+    "create_board": "Create board"
+  }
 }

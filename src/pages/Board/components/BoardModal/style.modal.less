@@ -1,0 +1,57 @@
+@import 'src/asset/less/mixin';
+
+.board-modal {
+  & {
+    display: flex;
+    position: relative;
+  }
+
+  .ant-modal-body {
+    padding: 0;
+  }
+
+  .board-info {
+    width: 100%;
+    height: inherit;
+    padding: 0.5rem;
+    .over-clay-background();
+
+    input {
+      background: transparent;
+      border: none;
+      color: white;
+      z-index: 2;
+      &::placeholder {
+        color: white;
+      }
+
+      &:focus,
+      &:active {
+        border: none;
+        background: rgba(#fff, 0.3);
+        outline: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .content {
+    display: flex;
+  }
+
+  .ant-modal-header {
+    display: none;
+  }
+
+  .ant-modal-content {
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .create-board-btn {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 1rem);
+  }
+}

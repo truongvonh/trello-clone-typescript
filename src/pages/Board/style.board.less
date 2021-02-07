@@ -1,0 +1,43 @@
+@import 'src/asset/less/mixin';
+@import 'node_modules/antd/lib/style/themes/default.less';
+
+#board-page {
+  height: 100%;
+}
+
+@height-card-board: 100px;
+
+.skeleton-board {
+  width: 240px !important;
+  margin-bottom: 20px !important;
+
+  .ant-skeleton-title {
+    height: @height-card-board !important;
+    margin: 0 !important;
+  }
+}
+
+.card-board-wrapper {
+  border-radius: 5px;
+  overflow: hidden;
+  &:hover {
+    .ant-card-body {
+      &:after {
+        background: rgba(#000, 0.5);
+      }
+    }
+  }
+  .ant-card-body {
+    .over-clay-background();
+    height: @height-card-board!important;
+    padding: 1rem;
+
+    .board-name {
+      font-size: @font-size-base;
+      font-weight: 700;
+      color: @white;
+      z-index: @zindex-picker-panel;
+      position: relative;
+    }
+  }
+}

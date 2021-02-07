@@ -1,0 +1,33 @@
+@import 'src/asset/less/mixin';
+@import 'node_modules/antd/lib/style/themes/default.less';
+
+.fade-in {
+  animation: fadeIn;
+  animation-duration: 0.6s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.button-switcher-theme {
+  position: fixed !important;
+  bottom: 50px !important;
+  right: 50px !important;
+  border: none;
+  outline: none;
+  z-index: 9999;
+  box-shadow: 0 3px 6px -4px rgba(@primary-color, 0.12), 0 6px 16px 0 rgba(@primary-color, 0.08),
+    0 9px 28px 8px rgba(@primary-color, 0.05) !important;
+}
+
+[data-theme='light'] {
+  .button-switcher-theme {
+    background: @primary-color !important;
+  }
+}

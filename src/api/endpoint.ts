@@ -7,3 +7,12 @@ export const AUTH_ENDPOINT = {
 export const DEVICE_ENDPOINT = {
   REGISTER: '/device/register',
 };
+
+export const BOARD_ENDPOINT = {
+  CREATE_BOARD: '/board',
+  GET_BOARD_OF_USER: (userId: string) => `board/${userId}`,
+};
+
+export const UNSPLASH_ENDPOINT = {
+  GET_ALL: '/unsplash',
+};
