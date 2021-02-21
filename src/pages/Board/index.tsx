@@ -57,6 +57,7 @@ const BoardPage: React.FC<IBoardPageProps> = ({}) => {
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={allBoards}
+            className={'list-board-wrapper'}
             renderItem={board => <CardBoardItem {...board} />}
           />
         </Row>

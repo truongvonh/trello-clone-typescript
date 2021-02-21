@@ -1,3 +1,5 @@
+@import 'src/asset/less/mixin';
+
 @box-size: 50px;
 @duration: 0.4s;
 @width-limit: 15px;
@@ -57,5 +59,20 @@
 
   to {
     height: @height-limit;
+  }
+}
+
+.modal-trello-loading {
+  .ant-modal-content {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .ant-modal-close {
+    display: none;
+  }
+
+  .ant-modal-body {
+    .flex-center();
   }
 }
