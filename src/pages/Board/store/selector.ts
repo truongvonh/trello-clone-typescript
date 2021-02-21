@@ -8,4 +8,10 @@ export const selectUnsplashImageChoose = (store: RootState) => store.board.image
 
 export const selectBoardLoading = (store: RootState) => store.board.loading;
 
+export const selectGlobalLoading = (store: RootState) => store.board.globalLoading;
+
 export const selectAllUserBoard = (store: RootState) => store.board.userBoards;
+
+export const selectAllList = (store: RootState) => store.board.allLists;
+
+export const selectBoardSelected = (store: RootState) => store.board.boardSelected;
