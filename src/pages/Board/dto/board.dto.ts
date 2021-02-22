@@ -17,7 +17,7 @@ export interface ICreateListPayload {
   title: string;
 }
 
-export interface ICreateCard {
+export interface ICreateCardPayload {
   listId: string;
   name: string;
 }

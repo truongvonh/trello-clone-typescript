@@ -1,11 +1,13 @@
 import { AppThunk } from 'redux/store';
 import { AxiosResponse } from 'axios';
 import axiosInstance from 'api/axios-config';
-import { BOARD_ENDPOINT, LIST_ENDPOINT, UNSPLASH_ENDPOINT } from 'api/endpoint';
+import { BOARD_ENDPOINT, CARD_ENDPOINT, LIST_ENDPOINT, UNSPLASH_ENDPOINT } from 'api/endpoint';
 import {
   endBoardProcess,
   endGlobalProcessProcess,
+  EventTypeEnum,
   IUnsplashImage,
+  onAddNewCard,
   onBoardSelected,
   onGetAllBoards,
   onGetListBoard,
@@ -19,19 +21,21 @@ import {
 import {
   selectAllList,
   selectBoardSelected,
+  selectEventBus,
   selectUnsplashImageChoose,
 } from 'pages/Board/store/selector';
 import { HelperServices } from 'services/helper';
 import { history } from 'redux/rootReducer';
 import { PageEnum } from 'router/page.enum';
-import { Lane, TrelloBoardResponse, TrelloCard } from 'pages/Board/dto/trello-board.class';
 import { ListResponse } from '../dto/list.class';
 import {
   ICardAdd,
+  ICreateCardPayload,
   ICreateListPayload,
   IQueryImagePayload,
   IUpdateListPayload,
 } from 'pages/Board/dto/board.dto';
+import { Lane, TrelloBoardResponse } from 'pages/Board/dto/trello-board.class';
 
 export enum OrderBy {
   Latest = 'latest',
@@ -113,7 +117,6 @@ export const onUpdateOrderList = (updateListPayload: IUpdateListPayload): AppThu
   dispatch,
   getState
 ) => {
-  console.log('updateListPayload', updateListPayload);
   try {
     dispatch(startBoardProcess());
     await axiosInstance.put(LIST_ENDPOINT.ON_UPDATE_LIST(updateListPayload.payload.id), {
@@ -133,10 +136,20 @@ export interface IUpdateTittleListPayload {
   name: string;
 }
 
+const handleEmptyValue = (valueName: string): AppThunk => (dispatch, getState) => {
+  const eventBus = selectEventBus(getState());
+  const list = selectAllList(getState());
+  if (!valueName) {
+    return eventBus.publish({ type: EventTypeEnum.UPDATE_LANES, lanes: list.lanes });
+  }
+};
+
 export const onUpdateTittleList = (updatePayload: IUpdateTittleListPayload): AppThunk => async (
   dispatch,
   getState
 ) => {
+  dispatch(handleEmptyValue(updatePayload.name));
+
   try {
     dispatch(startBoardProcess());
     await axiosInstance.put(LIST_ENDPOINT.ON_UPDATE_LIST(updatePayload.laneId), {
@@ -153,6 +166,8 @@ export const onCreateNewList = (createListPayload: ICreateListPayload): AppThunk
   dispatch,
   getState
 ) => {
+  dispatch(handleEmptyValue(createListPayload.title));
+
   try {
     const boardSelected = selectBoardSelected(getState());
     const currentList = selectAllList(getState());
@@ -182,4 +197,17 @@ export const onCreateNewList = (createListPayload: ICreateListPayload): AppThunk
 export const onCreateNewCard = (newCardPayload: ICardAdd): AppThunk => async (
   dispatch,
   getState
-) => {};
+) => {
+  try {
+    dispatch(startBoardProcess());
+    const requestPayload: ICreateCardPayload = {
+      listId: newCardPayload.laneId,
+      name: newCardPayload.card.title,
+    };
+    const { data: card } = await axiosInstance.post(CARD_ENDPOINT.NEW_CARD, requestPayload);
+    dispatch(onAddNewCard({ card, laneId: newCardPayload.laneId }));
+  } catch (e) {
+  } finally {
+    dispatch(endBoardProcess());
+  }
+};

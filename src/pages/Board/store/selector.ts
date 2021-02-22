@@ -15,3 +15,5 @@ export const selectAllUserBoard = (store: RootState) => store.board.userBoards;
 export const selectAllList = (store: RootState) => store.board.allLists;
 
 export const selectBoardSelected = (store: RootState) => store.board.boardSelected;
+
+export const selectEventBus = (store: RootState) => store.board.eventBus;

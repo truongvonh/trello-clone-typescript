@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import {
   getAllListBoard,
-  ICreateListPayload,
   onCreateNewList,
   onUpdateOrderList,
   onUpdateTittleList,
@@ -12,18 +11,14 @@ import {
 import './detail.style.less';
 // @ts-ignore
 import Board from 'react-trello';
-import {
-  selectAllList,
-  selectBoardLoading,
-  selectBoardSelected,
-  selectGlobalLoading,
-} from '../store/selector';
-import { IBoardResponse, onGetListBoard } from 'pages/Board/store/reducer';
-import { Lane } from 'pages/Board/dto/trello-board.class';
+import { selectAllList, selectBoardSelected, selectGlobalLoading } from '../store/selector';
+import { IBoardResponse, IEventBus, onGetListBoard, setEventBus } from 'pages/Board/store/reducer';
 import io from 'socket.io-client';
 import { BOARD_EMIT_EVENT, LIST_SUBSCRIBE_EVENT } from 'pages/Board/constants/board.socket-events';
 import { List } from '../dto/list.class';
 import { TrelloLoadingWrapper } from '../components/TrelloLoading';
+import { Lane } from 'pages/Board/dto/trello-board.class';
+import { ICreateListPayload } from 'pages/Board/dto/board.dto';
 
 const ENDPOINT = 'ws://localhost:4000/board';
 
@@ -39,7 +34,6 @@ const BoardDetailPage = () => {
   const { boardId }: IBoardParam = useParams();
   const dispatch = useDispatch();
   const allList = useSelector(selectAllList, shallowEqual);
-  const boardLoading = useSelector(selectBoardLoading, shallowEqual);
   const globalLoading = useSelector(selectGlobalLoading, shallowEqual);
   const boardSelected = useSelector(selectBoardSelected, shallowEqual);
 
@@ -94,6 +88,11 @@ const BoardDetailPage = () => {
     dispatch(onUpdateTittleList({ laneId, name: data.title }));
   };
 
+  const handleEventBus = (handle: IEventBus) => {
+    console.log('handle', handle);
+    dispatch(setEventBus(handle));
+  };
+
   return (
     <>
       <Board
@@ -107,6 +106,7 @@ const BoardDetailPage = () => {
         onLaneAdd={onLaneAdd}
         onLaneUpdate={onLaneUpdate}
         style={boardStyle(boardSelected)}
+        eventBusHandle={handleEventBus}
         handleLaneDragEnd={handleLaneDragEnd}
       />
       <TrelloLoadingWrapper visible={globalLoading} />

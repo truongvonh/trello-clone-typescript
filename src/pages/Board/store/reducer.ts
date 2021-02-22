@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TrelloBoardResponse } from 'pages/Board/dto/trello-board.class';
 import { IUpdateTittleListPayload } from 'pages/Board/store/actions';
+import { ICardAdd } from 'pages/Board/dto/board.dto';
+import { TrelloBoardResponse } from 'pages/Board/dto/trello-board.class';
 
 export interface IUnsplashUrls {
   raw?: string;
@@ -21,6 +22,23 @@ export interface IBoardResponse {
   urls: IUnsplashUrls;
 }
 
+export enum EventTypeEnum {
+  ADD_CARD = 'ADD_CARD',
+  UPDATE_CARD = 'UPDATE_CARD',
+  REMOVE_CARD = 'REMOVE_CARD',
+  MOVE_CARD = 'MOVE_CARD',
+  UPDATE_LANES = 'UPDATE_LANES',
+}
+
+export interface IEventBusParam {
+  type: EventTypeEnum;
+  [key: string]: any;
+}
+
+export interface IEventBus {
+  publish: (param: IEventBusParam) => {} | null;
+}
+
 interface IBoardState {
   isDisplayModalBoard: boolean;
   unsplashImages: Array<IUnsplashImage>;
@@ -30,6 +48,7 @@ interface IBoardState {
   userBoards: Array<IBoardResponse>;
   boardSelected: IBoardResponse | null;
   allLists: TrelloBoardResponse;
+  eventBus: IEventBus;
 }
 
 export const initialBoardState: IBoardState = {
@@ -43,6 +62,13 @@ export const initialBoardState: IBoardState = {
   allLists: {
     lanes: [],
   },
+  eventBus: {
+    publish: () => null,
+  },
+};
+
+const findUpdateIndex = (state: IBoardState, findId: string) => {
+  return state.allLists.lanes.findIndex(({ id }: { id: string }) => id === findId);
 };
 
 export const boardReducer = createSlice({
@@ -80,8 +106,17 @@ export const boardReducer = createSlice({
       state.boardSelected = action.payload;
     },
     onUpdateTitleList(state, action: PayloadAction<IUpdateTittleListPayload>) {
-      const updateIndex = state.allLists.lanes.findIndex(({ id }) => id === action.payload.laneId);
+      const updateIndex = findUpdateIndex(state, action.payload.laneId);
+
       state.allLists.lanes[updateIndex].title = action.payload.name;
+    },
+    onAddNewCard(state, action: PayloadAction<ICardAdd>) {
+      const updateIndex = findUpdateIndex(state, action.payload.laneId);
+      const currentCard = state.allLists.lanes[updateIndex].cards;
+      state.allLists.lanes[updateIndex].cards = [...currentCard, action.payload.card];
+    },
+    setEventBus(state, action: PayloadAction<IEventBus>) {
+      state.eventBus = action.payload;
     },
   },
 });
@@ -98,4 +133,6 @@ export const {
   onUpdateTitleList,
   startGlobalProcess,
   endGlobalProcessProcess,
+  onAddNewCard,
+  setEventBus,
 } = boardReducer.actions;
