@@ -12,7 +12,13 @@ import './detail.style.less';
 // @ts-ignore
 import Board from 'react-trello';
 import { selectAllList, selectBoardSelected, selectGlobalLoading } from '../store/selector';
-import { IBoardResponse, IEventBus, onGetListBoard, setEventBus } from 'pages/Board/store/reducer';
+import {
+  IBoardResponse,
+  IEventBus,
+  onGetListBoard,
+  onUpdateOrderListByReducer,
+  setEventBus,
+} from 'pages/Board/store/reducer';
 import io from 'socket.io-client';
 import { BOARD_EMIT_EVENT, LIST_SUBSCRIBE_EVENT } from 'pages/Board/constants/board.socket-events';
 import { List } from '../dto/list.class';
@@ -53,13 +59,17 @@ const BoardDetailPage = () => {
       dispatch(onGetListBoard({ ...allList, lanes: [...allList.lanes, newLane] }));
     });
 
-    socket.on(LIST_SUBSCRIBE_EVENT.UPDATED_LIST, (listUpdate: List) => {
-      const currentOrder = allList.lanes.findIndex(({ id }) => id === listUpdate._id);
+    socket.on(
+      LIST_SUBSCRIBE_EVENT.UPDATED_LIST,
+      ({ listUpdate, newOrder }: { listUpdate: List; newOrder: number }) => {
+        const parseLane = new Lane(listUpdate);
+        const currentOrder = allList.lanes.findIndex(({ id }) => id === listUpdate._id);
 
-      if (currentOrder !== listUpdate.order) return;
+        if (currentOrder !== listUpdate.order) return;
 
-      dispatch(getAllListBoard(boardId, false));
-    });
+        dispatch(onUpdateOrderListByReducer({ payload: parseLane, newOrder }));
+      }
+    );
 
     return socket;
   };
@@ -89,9 +99,10 @@ const BoardDetailPage = () => {
   };
 
   const handleEventBus = (handle: IEventBus) => {
-    console.log('handle', handle);
     dispatch(setEventBus(handle));
   };
+
+  const onCardUpdate = () => {};
 
   return (
     <>
@@ -105,6 +116,7 @@ const BoardDetailPage = () => {
         disallowAddingCard
         onLaneAdd={onLaneAdd}
         onLaneUpdate={onLaneUpdate}
+        onCardUpdate={onCardUpdate}
         style={boardStyle(boardSelected)}
         eventBusHandle={handleEventBus}
         handleLaneDragEnd={handleLaneDragEnd}

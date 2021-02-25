@@ -11,6 +11,7 @@ import {
   onBoardSelected,
   onGetAllBoards,
   onGetListBoard,
+  onUpdateOrderListByReducer,
   onUpdateTitleList,
   selectUnsplashImage,
   setAllUnsplashImageSuccess,
@@ -122,9 +123,7 @@ export const onUpdateOrderList = (updateListPayload: IUpdateListPayload): AppThu
     await axiosInstance.put(LIST_ENDPOINT.ON_UPDATE_LIST(updateListPayload.payload.id), {
       order: updateListPayload.newOrder,
     });
-    await helperService.sleep(200);
-    const boardSelected = selectBoardSelected(getState());
-    dispatch(getAllListBoard(boardSelected?._id || '', false));
+    dispatch(onUpdateOrderListByReducer(updateListPayload));
   } catch (e) {
   } finally {
     dispatch(endBoardProcess());

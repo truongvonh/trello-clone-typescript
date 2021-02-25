@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUpdateTittleListPayload } from 'pages/Board/store/actions';
-import { ICardAdd } from 'pages/Board/dto/board.dto';
-import { TrelloBoardResponse } from 'pages/Board/dto/trello-board.class';
+import { ICardAdd, IUpdateListPayload } from 'pages/Board/dto/board.dto';
+import { Lane, TrelloBoardResponse } from 'pages/Board/dto/trello-board.class';
+import { HelperServices } from 'services/helper';
 
 export interface IUnsplashUrls {
   raw?: string;
@@ -71,6 +72,8 @@ const findUpdateIndex = (state: IBoardState, findId: string) => {
   return state.allLists.lanes.findIndex(({ id }: { id: string }) => id === findId);
 };
 
+const { replaceItemIndexInArray } = new HelperServices();
+
 export const boardReducer = createSlice({
   name: 'board',
   initialState: initialBoardState,
@@ -118,6 +121,18 @@ export const boardReducer = createSlice({
     setEventBus(state, action: PayloadAction<IEventBus>) {
       state.eventBus = action.payload;
     },
+    onUpdateOrderListByReducer(state, action: PayloadAction<IUpdateListPayload>) {
+      const { lanes } = state.allLists;
+      const { newOrder: targetIndex, payload: dataReplace } = action.payload;
+      const sourceIndex = lanes.findIndex(({ id }) => id === dataReplace.id);
+
+      state.allLists.lanes = replaceItemIndexInArray<Lane>({
+        array: lanes,
+        sourceIndex,
+        targetIndex,
+        dataReplace,
+      });
+    },
   },
 });
 
@@ -135,4 +150,5 @@ export const {
   endGlobalProcessProcess,
   onAddNewCard,
   setEventBus,
+  onUpdateOrderListByReducer,
 } = boardReducer.actions;
