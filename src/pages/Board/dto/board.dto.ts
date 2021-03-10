@@ -26,3 +26,17 @@ export interface ICardAdd {
   card: TrelloCard;
   laneId: string;
 }
+
+export interface IUpdateCardOderPayload {
+  cardId: string;
+  sourceLaneId: string;
+  targetLaneId: string;
+  position: number;
+  cardDetails: TrelloCard;
+}
+
+export interface IUpdateCardOderBodyRequest {
+  sourceListId: string;
+  targetListId: string;
+  order: number;
+}

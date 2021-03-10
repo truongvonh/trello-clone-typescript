@@ -5,6 +5,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import {
   getAllListBoard,
   onCreateNewList,
+  onUpdateCardOrder,
   onUpdateOrderList,
   onUpdateTittleList,
 } from '../store/actions';
@@ -20,10 +21,14 @@ import {
   setEventBus,
 } from 'pages/Board/store/reducer';
 import io from 'socket.io-client';
-import { BOARD_EMIT_EVENT, LIST_SUBSCRIBE_EVENT } from 'pages/Board/constants/board.socket-events';
+import {
+  BOARD_EMIT_EVENT,
+  CARD_SUBSCRIBE_EVENT,
+  LIST_SUBSCRIBE_EVENT,
+} from 'pages/Board/constants/board.socket-events';
 import { List } from '../dto/list.class';
 import { TrelloLoadingWrapper } from '../components/TrelloLoading';
-import { Lane } from 'pages/Board/dto/trello-board.class';
+import { Lane, TrelloCard } from 'pages/Board/dto/trello-board.class';
 import { ICreateListPayload } from 'pages/Board/dto/board.dto';
 
 const ENDPOINT = 'ws://localhost:4000/board';
@@ -61,15 +66,19 @@ const BoardDetailPage = () => {
 
     socket.on(
       LIST_SUBSCRIBE_EVENT.UPDATED_LIST,
-      ({ listUpdate, newOrder }: { listUpdate: List; newOrder: number }) => {
-        const parseLane = new Lane(listUpdate);
-        const currentOrder = allList.lanes.findIndex(({ id }) => id === listUpdate._id);
+      ({ listToUpdate, newOrder }: { listToUpdate: List; newOrder: number }) => {
+        const parseLane = new Lane(listToUpdate);
+        const currentOrder = allList.lanes.findIndex(({ id }) => id === listToUpdate._id);
 
-        if (currentOrder !== listUpdate.order) return;
+        if (currentOrder !== listToUpdate.order) return;
 
         dispatch(onUpdateOrderListByReducer({ payload: parseLane, newOrder }));
       }
     );
+
+    socket.on(CARD_SUBSCRIBE_EVENT.NEW_CARD_ADDED, (newCard: any) => {});
+
+    socket.on(CARD_SUBSCRIBE_EVENT.UPDATED_CARD_ORDER, (payload: any) => {});
 
     return socket;
   };
@@ -102,6 +111,16 @@ const BoardDetailPage = () => {
     dispatch(setEventBus(handle));
   };
 
+  const handleDragEnd = (
+    cardId: string,
+    sourceLaneId: string,
+    targetLaneId: string,
+    position: number,
+    cardDetails: TrelloCard
+  ) => {
+    dispatch(onUpdateCardOrder({ cardId, sourceLaneId, targetLaneId, position, cardDetails }));
+  };
+
   const onCardUpdate = () => {};
 
   return (
@@ -120,6 +139,7 @@ const BoardDetailPage = () => {
         style={boardStyle(boardSelected)}
         eventBusHandle={handleEventBus}
         handleLaneDragEnd={handleLaneDragEnd}
+        handleDragEnd={handleDragEnd}
       />
       <TrelloLoadingWrapper visible={globalLoading} />
     </>

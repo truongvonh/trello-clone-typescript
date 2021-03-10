@@ -14,13 +14,17 @@ import { useTranslation } from 'react-i18next';
 import GridSquareImage from 'pages/Board/components/GridSquareImage';
 import { createNewBoard } from 'pages/Board/store/actions';
 
+const KEYBOARD_CHARACTER = {
+  ENTER: {
+    KEY: 'Enter',
+    CODE: 13,
+  },
+};
+
 const BoardModal = React.memo(() => {
   const isModalBoardStatus = useSelector(selectBoardModalStatus, shallowEqual);
   const isBoardLoading = useSelector(selectBoardLoading, shallowEqual);
-  const unsplashImageSelected = useSelector(
-    selectUnsplashImageChoose,
-    shallowEqual
-  );
+  const unsplashImageSelected = useSelector(selectUnsplashImageChoose, shallowEqual);
 
   const [boardName, setBoardName] = useState<string>('');
 
@@ -32,6 +36,12 @@ const BoardModal = React.memo(() => {
 
   const onSubmitForm = () => dispatch(createNewBoard(boardName));
   const handleCancel = () => dispatch(toggleBoardModal(false));
+
+  const checkOnEnter = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === KEYBOARD_CHARACTER.ENTER.KEY || e.keyCode === KEYBOARD_CHARACTER.ENTER.CODE) {
+      onSubmitForm();
+    }
+  };
 
   return (
     <Modal
@@ -55,6 +65,7 @@ const BoardModal = React.memo(() => {
               name={'name'}
               placeholder={t('board_page.new_board_title')}
               onChange={onChangeBoardName}
+              onKeyUp={checkOnEnter}
             />
           </Form.Item>
         </div>

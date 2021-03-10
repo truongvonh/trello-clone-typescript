@@ -26,4 +26,5 @@ export const LIST_ENDPOINT = {
 export const CARD_ENDPOINT = {
   NEW_CARD: `/card`,
   UPDATE_CARD: (cardId: string) => `/card/${cardId}`,
+  UPDATE_CARD_ORDER: (cardId: string) => `/card/${cardId}/order`,
 };

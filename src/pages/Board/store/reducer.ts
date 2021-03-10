@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUpdateTittleListPayload } from 'pages/Board/store/actions';
-import { ICardAdd, IUpdateListPayload } from 'pages/Board/dto/board.dto';
-import { Lane, TrelloBoardResponse } from 'pages/Board/dto/trello-board.class';
+import { ICardAdd, IUpdateCardOderPayload, IUpdateListPayload } from 'pages/Board/dto/board.dto';
+import { Lane, TrelloBoardResponse, TrelloCard } from 'pages/Board/dto/trello-board.class';
 import { HelperServices } from 'services/helper';
 
 export interface IUnsplashUrls {
@@ -133,6 +133,34 @@ export const boardReducer = createSlice({
         dataReplace,
       });
     },
+    onUpdateCardOrderReducer(state, action: PayloadAction<IUpdateCardOderPayload>) {
+      const { sourceLaneId, targetLaneId, position, cardId, cardDetails } = action.payload;
+      const { lanes } = state.allLists;
+      if (sourceLaneId === targetLaneId) {
+        const updateIndex = lanes.findIndex(({ id }) => targetLaneId === id);
+        const sourceCardIndex = lanes[updateIndex].cards.findIndex(({ id }) => id === cardId);
+        state.allLists.lanes[updateIndex] = replaceItemIndexInArray<TrelloCard>({
+          array: lanes[updateIndex].cards,
+          sourceIndex: sourceCardIndex,
+          targetIndex: position,
+          dataReplace: cardDetails,
+        });
+      } else {
+        const updateSourceListId = lanes.findIndex(({ id }) => id === sourceLaneId);
+        state.allLists.lanes[updateSourceListId].cards = lanes[updateSourceListId].cards.filter(
+          ({ id }) => id !== cardId
+        );
+        const updateTargetListId = lanes.findIndex(({ id }) => id === targetLaneId);
+        const tmpNewCards = [...lanes[updateTargetListId].cards, cardDetails];
+        const cardsByTargetListId = state.allLists.lanes[updateTargetListId].cards;
+        state.allLists.lanes[updateTargetListId].cards = replaceItemIndexInArray<TrelloCard>({
+          array: tmpNewCards,
+          sourceIndex: cardsByTargetListId.length,
+          targetIndex: position,
+          dataReplace: cardDetails,
+        });
+      }
+    },
   },
 });
 
@@ -151,4 +179,5 @@ export const {
   onAddNewCard,
   setEventBus,
   onUpdateOrderListByReducer,
+  onUpdateCardOrderReducer,
 } = boardReducer.actions;

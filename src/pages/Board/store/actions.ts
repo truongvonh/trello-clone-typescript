@@ -11,6 +11,7 @@ import {
   onBoardSelected,
   onGetAllBoards,
   onGetListBoard,
+  onUpdateCardOrderReducer,
   onUpdateOrderListByReducer,
   onUpdateTitleList,
   selectUnsplashImage,
@@ -34,6 +35,8 @@ import {
   ICreateCardPayload,
   ICreateListPayload,
   IQueryImagePayload,
+  IUpdateCardOderBodyRequest,
+  IUpdateCardOderPayload,
   IUpdateListPayload,
 } from 'pages/Board/dto/board.dto';
 import { Lane, TrelloBoardResponse } from 'pages/Board/dto/trello-board.class';
@@ -205,6 +208,25 @@ export const onCreateNewCard = (newCardPayload: ICardAdd): AppThunk => async (
     };
     const { data: card } = await axiosInstance.post(CARD_ENDPOINT.NEW_CARD, requestPayload);
     dispatch(onAddNewCard({ card, laneId: newCardPayload.laneId }));
+  } catch (e) {
+  } finally {
+    dispatch(endBoardProcess());
+  }
+};
+
+export const onUpdateCardOrder = (
+  updateCardOrderPayload: IUpdateCardOderPayload
+): AppThunk => async (dispatch, getState) => {
+  try {
+    dispatch(startBoardProcess());
+    const { cardId, sourceLaneId, targetLaneId, position } = updateCardOrderPayload;
+    const bodyRequestPayload: IUpdateCardOderBodyRequest = {
+      sourceListId: sourceLaneId,
+      targetListId: targetLaneId,
+      order: position,
+    };
+    await axiosInstance.put(CARD_ENDPOINT.UPDATE_CARD_ORDER(cardId), bodyRequestPayload);
+    dispatch(onUpdateCardOrderReducer(updateCardOrderPayload));
   } catch (e) {
   } finally {
     dispatch(endBoardProcess());
